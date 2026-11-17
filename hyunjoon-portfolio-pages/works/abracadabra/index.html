@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>ABRACADABRA</title>
+
+
+  <style>
+
+    /* ======================================================
+       BASIC
+    ====================================================== */
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    :root {
+
+      /*
+        사이트 배경
+
+        마지막 fade 단계의 글자는
+        정확히 이 색과 같아집니다.
+      */
+
+      --bg: #ECEBE7;
+
+      --ink: #111111;
+
+      --font-size: 120px;
+
+
+      /*
+        기본 폰트
+
+        macOS → Helvetica
+        없으면 Arial
+      */
+
+      --site-font:
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    }
+
+
+    html,
+    body {
+
+      margin: 0;
+
+      width: 100%;
+      height: 100%;
+
+      overflow: hidden;
+
+    }
+
+
+    body {
+
+      background: var(--bg);
+
+      color: var(--ink);
+
+      font-family: var(--site-font);
+
+    }
+
+
+
+    /* ======================================================
+       TOP HOVER ZONE
+    ====================================================== */
+
+    .top-zone {
+
+      position: fixed;
+
+      top: 0;
+      left: 0;
+
+      width: 100%;
+
+      height: 110px;
+
+      z-index: 1000;
+
+    }
+
+
+
+    /* ======================================================
+       TOP INDICATOR
+    ====================================================== */
+
+    .hover-line {
+
+      position: absolute;
+
+      top: 0;
+      left: 50%;
+
+      transform:
+        translateX(-50%);
+
+      width: 80px;
+      height: 2px;
+
+      background:
+        var(--ink);
+
+      opacity: 0.25;
+
+      transition:
+        width 0.3s ease,
+        opacity 0.3s ease;
+
+    }
+
+
+    .top-zone:hover
+    .hover-line {
+
+      width: 100%;
+
+      opacity: 0;
+
+    }
+
+
+
+    /* ======================================================
+       HEADER
+    ====================================================== */
+
+    header {
+
+      position: absolute;
+
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 64px;
+
+
+      padding:
+        0 22px;
+
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content:
+        space-between;
+
+
+      /*
+        배경과 정확히 같은 색
+      */
+
+      background:
+        var(--bg);
+
+
+      border-bottom:
+        1px solid var(--ink);
+
+
+      font-family:
+        var(--site-font);
+
+
+      transform:
+        translateY(-100%);
+
+
+      opacity: 0;
+
+
+      transition:
+
+        transform
+        0.35s
+        cubic-bezier(
+          0.22,
+          1,
+          0.36,
+          1
+        ),
+
+        opacity
+        0.25s
+        ease;
+
+    }
+
+
+    .top-zone:hover
+    header {
+
+      transform:
+        translateY(0);
+
+      opacity: 1;
+
+    }
+
+
+
+    /* ======================================================
+       LOGO
+    ====================================================== */
+
+    .logo {
+
+      font-family:
+        var(--site-font);
+
+      font-size: 17px;
+
+      font-weight: 500;
+
+      letter-spacing:
+        0.08em;
+
+      white-space:
+        nowrap;
+
+    }
+
+
+
+    /* ======================================================
+       CONTROLS
+    ====================================================== */
+
+    .controls {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 22px;
+
+      font-family:
+        var(--site-font);
+
+      font-size: 10px;
+
+      letter-spacing:
+        0.06em;
+
+    }
+
+
+    .control {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      font-family:
+        var(--site-font);
+
+    }
+
+
+
+    /* ======================================================
+       SLIDERS
+    ====================================================== */
+
+    input[type="range"] {
+
+      appearance: none;
+
+      -webkit-appearance: none;
+
+      width: 90px;
+
+      height: 1px;
+
+      background:
+        var(--ink);
+
+      outline: none;
+
+      cursor: pointer;
+
+    }
+
+
+    input[type="range"]
+    ::-webkit-slider-thumb {
+
+      appearance: none;
+
+    }
+
+
+    input[type="range"]::-webkit-slider-thumb {
+
+      appearance: none;
+
+      -webkit-appearance: none;
+
+      width: 9px;
+
+      height: 9px;
+
+      border-radius: 50%;
+
+      background:
+        var(--ink);
+
+      cursor: pointer;
+
+    }
+
+
+    input[type="range"]::-moz-range-thumb {
+
+      width: 9px;
+
+      height: 9px;
+
+      border: none;
+
+      border-radius: 50%;
+
+      background:
+        var(--ink);
+
+      cursor: pointer;
+
+    }
+
+
+
+    /* ======================================================
+       BUTTONS
+    ====================================================== */
+
+    button,
+    .font-upload {
+
+      padding:
+        7px 11px;
+
+      background:
+        transparent;
+
+      border:
+        1px solid var(--ink);
+
+      color:
+        var(--ink);
+
+      font-family:
+        var(--site-font);
+
+      font-size: 9px;
+
+      letter-spacing:
+        0.06em;
+
+      cursor: pointer;
+
+      transition:
+        background 0.2s ease,
+        color 0.2s ease;
+
+    }
+
+
+    button:hover,
+    .font-upload:hover {
+
+      background:
+        var(--ink);
+
+    }
+
+
+    /*
+      버튼에 마우스를 올렸을 때는
+      글자를 전부 배경색으로 표시
+    */
+
+    button:hover span,
+    .font-upload:hover span {
+
+      color:
+        var(--bg)
+        !important;
+
+    }
+
+
+    #fontInput {
+
+      display: none;
+
+    }
+
+
+
+    /* ======================================================
+       MAIN
+    ====================================================== */
+
+    .tester {
+
+      position: relative;
+
+      width: 100vw;
+      height: 100vh;
+
+      overflow: hidden;
+
+    }
+
+
+
+    /* ======================================================
+       INVISIBLE INPUT
+    ====================================================== */
+
+    #inputArea {
+
+      position: absolute;
+
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+
+      padding:
+        55px
+        35px
+        55px
+        35px;
+
+
+      margin: 0;
+
+      resize: none;
+
+      border: none;
+
+      outline: none;
+
+      background:
+        transparent;
+
+
+      /*
+        입력 자체는 숨기고
+        커서만 표시
+      */
+
+      color:
+        transparent;
+
+      caret-color:
+        var(--ink);
+
+
+      font-family:
+        var(--site-font);
+
+
+      font-size:
+        var(--font-size);
+
+
+      line-height:
+        0.95;
+
+
+      letter-spacing:
+        -0.04em;
+
+
+      white-space:
+        pre-wrap;
+
+
+      overflow-wrap:
+        break-word;
+
+
+      z-index: 2;
+
+    }
+
+
+
+    /* ======================================================
+       DISPLAY TEXT
+    ====================================================== */
+
+    #displayArea {
+
+      position: absolute;
+
+      inset: 0;
+
+
+      padding:
+        55px
+        35px
+        55px
+        35px;
+
+
+      font-family:
+        var(--site-font);
+
+
+      font-size:
+        var(--font-size);
+
+
+      line-height:
+        0.95;
+
+
+      letter-spacing:
+        -0.04em;
+
+
+      white-space:
+        pre-wrap;
+
+
+      overflow-wrap:
+        break-word;
+
+
+      pointer-events:
+        none;
+
+
+      z-index: 1;
+
+    }
+
+
+
+    .fade-letter {
+
+      /*
+        slider 움직일 때
+        부드럽게 변화
+      */
+
+      transition:
+        color 0.18s ease;
+
+    }
+
+
+
+    /* ======================================================
+       BOTTOM INFO
+    ====================================================== */
+
+    .bottom-info {
+
+      position: absolute;
+
+      left: 22px;
+
+      bottom: 18px;
+
+      z-index: 10;
+
+      font-family:
+        var(--site-font);
+
+      font-size: 9px;
+
+      letter-spacing:
+        0.08em;
+
+      text-transform:
+        uppercase;
+
+      pointer-events:
+        none;
+
+    }
+
+
+
+    #fontName {
+
+      position: absolute;
+
+      right: 22px;
+
+      bottom: 18px;
+
+      z-index: 10;
+
+      font-family:
+        var(--site-font);
+
+      font-size: 9px;
+
+      letter-spacing:
+        0.08em;
+
+      pointer-events:
+        none;
+
+    }
+
+
+
+    /* ======================================================
+       MOBILE
+    ====================================================== */
+
+    @media (
+      max-width: 800px
+    ) {
+
+      header {
+
+        padding:
+          0 12px;
+
+      }
+
+
+      .controls {
+
+        gap: 10px;
+
+      }
+
+
+      .control-label {
+
+        display: none;
+
+      }
+
+
+      input[type="range"] {
+
+        width: 55px;
+
+      }
+
+
+      button,
+      .font-upload {
+
+        padding:
+          6px 8px;
+
+      }
+
+
+      #inputArea,
+      #displayArea {
+
+        padding:
+          60px
+          18px
+          50px
+          18px;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+
+<body>
+
+
+
+  <!-- ====================================================
+       TOP UI
+  ===================================================== -->
+
+  <div class="top-zone">
+
+
+    <div
+      class="hover-line"
+    ></div>
+
+
+
+    <header>
+
+
+      <!-- LOGO -->
+
+      <div
+        class="logo fade-ui"
+        data-text="ABRACADABRA"
+      ></div>
+
+
+
+      <div
+        class="controls"
+      >
+
+
+
+        <!-- LOAD FONT -->
+
+        <label
+          class="font-upload"
+        >
+
+          <span
+            class="fade-ui"
+            data-text="LOAD FONT"
+          ></span>
+
+
+          <input
+            type="file"
+
+            id="fontInput"
+
+            accept="
+              .ttf,
+              .otf,
+              .woff,
+              .woff2
+            "
+          >
+
+        </label>
+
+
+
+        <!-- SIZE -->
+
+        <div
+          class="control"
+        >
+
+          <span
+            class="
+              control-label
+              fade-ui
+            "
+
+            data-text="SIZE"
+          ></span>
+
+
+          <input
+            type="range"
+
+            id="sizeSlider"
+
+            min="30"
+
+            max="250"
+
+            value="120"
+          >
+
+
+          <span
+            id="sizeValue"
+          >
+            120
+          </span>
+
+        </div>
+
+
+
+        <!-- FADE -->
+
+        <div
+          class="control"
+        >
+
+          <span
+            class="
+              control-label
+              fade-ui
+            "
+
+            data-text="FADE"
+          ></span>
+
+
+          <input
+            type="range"
+
+            id="fadeSlider"
+
+            min="5"
+
+            max="50"
+
+            value="25"
+          >
+
+
+          <span
+            id="fadeValue"
+          >
+            25
+          </span>
+
+        </div>
+
+
+
+        <!-- CLEAR -->
+
+        <button
+          id="clearButton"
+        >
+
+          <span
+            class="fade-ui"
+
+            data-text="CLEAR"
+          ></span>
+
+        </button>
+
+
+      </div>
+
+    </header>
+
+  </div>
+
+
+
+  <!-- ====================================================
+       MAIN
+  ===================================================== -->
+
+  <main
+    class="tester"
+  >
+
+
+    <div
+      id="displayArea"
+    ></div>
+
+
+
+    <textarea
+      id="inputArea"
+
+      spellcheck="false"
+
+      autofocus
+    >ABRACADABRA</textarea>
+
+
+
+    <div
+      class="
+        bottom-info
+        fade-ui
+      "
+
+      data-text="MADE BY APPLESOAP"
+    ></div>
+
+
+
+    <div
+      id="fontName"
+
+      data-text="HELVETICA"
+    ></div>
+
+
+  </main>
+
+
+
+  <script>
+
+
+    /* ======================================================
+       ELEMENTS
+    ====================================================== */
+
+    const inputArea =
+      document.querySelector(
+        "#inputArea"
+      );
+
+
+    const displayArea =
+      document.querySelector(
+        "#displayArea"
+      );
+
+
+    const fontInput =
+      document.querySelector(
+        "#fontInput"
+      );
+
+
+    const fontName =
+      document.querySelector(
+        "#fontName"
+      );
+
+
+    const sizeSlider =
+      document.querySelector(
+        "#sizeSlider"
+      );
+
+
+    const sizeValue =
+      document.querySelector(
+        "#sizeValue"
+      );
+
+
+    const fadeSlider =
+      document.querySelector(
+        "#fadeSlider"
+      );
+
+
+    const fadeValue =
+      document.querySelector(
+        "#fadeValue"
+      );
+
+
+    const clearButton =
+      document.querySelector(
+        "#clearButton"
+      );
+
+
+
+    /* ======================================================
+       HEX → RGB
+    ====================================================== */
+
+    function hexToRGB(hex) {
+
+
+      /*
+        #ECEBE7
+        →
+        { r: 236, g: 235, b: 231 }
+      */
+
+
+      hex =
+        hex
+          .replace(
+            "#",
+            ""
+          )
+          .trim();
+
+
+
+      if (
+        hex.length === 3
+      ) {
+
+        hex =
+
+          hex
+            .split("")
+            .map(
+              char =>
+                char + char
+            )
+            .join("");
+
+      }
+
+
+
+      return {
+
+        r:
+          parseInt(
+            hex.substring(
+              0,
+              2
+            ),
+            16
+          ),
+
+        g:
+          parseInt(
+            hex.substring(
+              2,
+              4
+            ),
+            16
+          ),
+
+        b:
+          parseInt(
+            hex.substring(
+              4,
+              6
+            ),
+            16
+          )
+
+      };
+
+    }
+
+
+
+    /* ======================================================
+       GET CURRENT COLORS
+    ====================================================== */
+
+    function getSiteColors() {
+
+
+      const styles =
+        getComputedStyle(
+          document.documentElement
+        );
+
+
+      const inkHex =
+        styles
+          .getPropertyValue(
+            "--ink"
+          )
+          .trim();
+
+
+      const bgHex =
+        styles
+          .getPropertyValue(
+            "--bg"
+          )
+          .trim();
+
+
+
+      return {
+
+        ink:
+          hexToRGB(
+            inkHex
+          ),
+
+        bg:
+          hexToRGB(
+            bgHex
+          )
+
+      };
+
+    }
+
+
+
+    /* ======================================================
+       MIX COLORS
+    ====================================================== */
+
+    /*
+      amount:
+
+      0   → 완전 검정
+      0.5 → 검정과 배경 중간
+      1   → 배경과 완전히 동일
+    */
+
+    function mixColor(
+      start,
+      end,
+      amount
+    ) {
+
+
+      const r =
+        Math.round(
+
+          start.r
+          +
+          (
+            end.r
+            -
+            start.r
+          )
+          *
+          amount
+
+        );
+
+
+      const g =
+        Math.round(
+
+          start.g
+          +
+          (
+            end.g
+            -
+            start.g
+          )
+          *
+          amount
+
+        );
+
+
+      const b =
+        Math.round(
+
+          start.b
+          +
+          (
+            end.b
+            -
+            start.b
+          )
+          *
+          amount
+
+        );
+
+
+      return (
+        `rgb(${r}, ${g}, ${b})`
+      );
+
+    }
+
+
+
+    /* ======================================================
+       FADED TEXT
+    ====================================================== */
+
+    function createFadedText(
+      element,
+      text
+    ) {
+
+
+      element.innerHTML =
+        "";
+
+
+      /*
+        각 글자의 등장 횟수
+      */
+
+      const letterCount =
+        {};
+
+
+      /*
+        FADE slider
+
+        예:
+
+        25
+
+        →
+
+        반복될 때마다
+        배경 방향으로 25%
+      */
+
+      const fadeAmount =
+
+        Number(
+          fadeSlider.value
+        )
+        /
+        100;
+
+
+
+      const colors =
+        getSiteColors();
+
+
+
+      Array
+        .from(text)
+        .forEach(
+
+          character => {
+
+
+            /* ---------------------
+               LINE BREAK
+            --------------------- */
+
+            if (
+              character === "\n"
+            ) {
+
+              element.appendChild(
+
+                document
+                  .createTextNode(
+                    "\n"
+                  )
+
+              );
+
+              return;
+
+            }
+
+
+
+            /* ---------------------
+               SPACE
+            --------------------- */
+
+            if (
+              character === " "
+            ) {
+
+              element.appendChild(
+
+                document
+                  .createTextNode(
+                    " "
+                  )
+
+              );
+
+              return;
+
+            }
+
+
+
+            /* ---------------------
+               CASE SENSITIVE
+
+               A ≠ a
+            --------------------- */
+
+            const key =
+              character;
+
+
+
+            if (
+              letterCount[key]
+              === undefined
+            ) {
+
+              letterCount[key] =
+                0;
+
+            }
+
+
+
+            const occurrence =
+              letterCount[key];
+
+
+
+            /* ---------------------
+               FADE PROGRESS
+
+               FADE 25 기준
+
+               1st → 0
+               2nd → .25
+               3rd → .50
+               4th → .75
+               5th → 1
+            --------------------- */
+
+            const progress =
+
+              Math.min(
+
+                occurrence
+                *
+                fadeAmount,
+
+                1
+
+              );
+
+
+
+            const color =
+              mixColor(
+
+                colors.ink,
+
+                colors.bg,
+
+                progress
+
+              );
+
+
+
+            /* ---------------------
+               CREATE LETTER
+            --------------------- */
+
+            const span =
+
+              document
+                .createElement(
+                  "span"
+                );
+
+
+            span.className =
+              "fade-letter";
+
+
+            span.textContent =
+              character;
+
+
+            span.style.color =
+              color;
+
+
+
+            element.appendChild(
+              span
+            );
+
+
+
+            letterCount[key]++;
+
+          }
+
+        );
+
+    }
+
+
+
+    /* ======================================================
+       MAIN TEXT
+    ====================================================== */
+
+    function renderMainText() {
+
+
+      createFadedText(
+
+        displayArea,
+
+        inputArea.value
+
+      );
+
+    }
+
+
+
+    /* ======================================================
+       UI TEXT
+    ====================================================== */
+
+    function renderUI() {
+
+
+      const elements =
+
+        document.querySelectorAll(
+          "[data-text]"
+        );
+
+
+
+      elements.forEach(
+
+        element => {
+
+
+          createFadedText(
+
+            element,
+
+            element.dataset.text
+
+          );
+
+        }
+
+      );
+
+    }
+
+
+
+    /* ======================================================
+       EVERYTHING
+    ====================================================== */
+
+    function renderEverything() {
+
+
+      renderMainText();
+
+      renderUI();
+
+    }
+
+
+
+    /* ======================================================
+       INPUT
+    ====================================================== */
+
+    inputArea
+      .addEventListener(
+
+        "input",
+
+        renderMainText
+
+      );
+
+
+
+    /* ======================================================
+       FONT SIZE
+    ====================================================== */
+
+    sizeSlider
+      .addEventListener(
+
+        "input",
+
+        () => {
+
+
+          const size =
+            sizeSlider.value;
+
+
+          document
+            .documentElement
+            .style
+            .setProperty(
+
+              "--font-size",
+
+              `${size}px`
+
+            );
+
+
+          sizeValue.textContent =
+            size;
+
+        }
+
+      );
+
+
+
+    /* ======================================================
+       FADE CONTROL
+    ====================================================== */
+
+    fadeSlider
+      .addEventListener(
+
+        "input",
+
+        () => {
+
+
+          fadeValue.textContent =
+            fadeSlider.value;
+
+
+          /*
+            메인 + 로고 + 메뉴 +
+            폰트 이름 전부 변경
+          */
+
+          renderEverything();
+
+        }
+
+      );
+
+
+
+    /* ======================================================
+       CLEAR
+    ====================================================== */
+
+    clearButton
+      .addEventListener(
+
+        "click",
+
+        () => {
+
+
+          inputArea.value =
+            "";
+
+
+          renderMainText();
+
+
+          inputArea.focus();
+
+        }
+
+      );
+
+
+
+    /* ======================================================
+       FONT UPLOAD
+    ====================================================== */
+
+    fontInput
+      .addEventListener(
+
+        "change",
+
+        async event => {
+
+
+          const file =
+            event
+              .target
+              .files[0];
+
+
+          if (!file) {
+
+            return;
+
+          }
+
+
+
+          const fontURL =
+            URL.createObjectURL(
+              file
+            );
+
+
+
+          const customFont =
+            new FontFace(
+
+              "CustomSiteFont",
+
+              `url(${fontURL})`
+
+            );
+
+
+
+          try {
+
+
+            await customFont.load();
+
+
+            document.fonts.add(
+              customFont
+            );
+
+
+
+            /*
+              전체 사이트 폰트 변경
+            */
+
+            document
+              .documentElement
+              .style
+              .setProperty(
+
+                "--site-font",
+
+                "'CustomSiteFont'"
+
+              );
+
+
+
+            /*
+              확장자 제거
+            */
+
+            const cleanFontName =
+
+              file.name.replace(
+
+                /\.[^/.]+$/,
+
+                ""
+
+              );
+
+
+
+            fontName.dataset.text =
+              cleanFontName;
+
+
+
+            renderEverything();
+
+
+            inputArea.focus();
+
+
+          }
+
+
+          catch (error) {
+
+
+            console.error(
+              error
+            );
+
+
+            alert(
+              "폰트 파일을 불러오지 못했습니다."
+            );
+
+          }
+
+        }
+
+      );
+
+
+
+    /* ======================================================
+       SCROLL SYNC
+    ====================================================== */
+
+    inputArea
+      .addEventListener(
+
+        "scroll",
+
+        () => {
+
+
+          displayArea
+            .style
+            .transform =
+
+            `translate(
+              ${-inputArea.scrollLeft}px,
+              ${-inputArea.scrollTop}px
+            )`;
+
+        }
+
+      );
+
+
+
+    /* ======================================================
+       INITIALIZE
+    ====================================================== */
+
+    renderEverything();
+
+
+    inputArea.focus();
+
+
+    inputArea
+      .setSelectionRange(
+
+        inputArea.value.length,
+
+        inputArea.value.length
+
+      );
+
+
+  </script>
+
+</body>
+
+</html>
