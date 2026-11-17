@@ -1,0 +1,38 @@
+/* The archive's photo story shares the portfolio's unruled, asymmetric page. */
+.project-story{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:32px 0 28px;scrollbar-gutter:stable;word-break:keep-all;overflow-wrap:break-word}
+.project-story[lang=en]{word-break:normal}
+.story-intro,.story-scene{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1fr);gap:clamp(28px,4.5vw,76px);align-items:start}
+.story-intro{margin:0 0 clamp(58px,7vw,112px)}
+.story-overview{max-width:810px;padding-right:6vw}
+.story-kicker{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.03em;margin:0 0 28px}
+.story-intro-copy{font-size:clamp(19px,1.7vw,25px);line-height:1.8;letter-spacing:-.025em;margin:0 0 1em}
+.story-intro-copy:last-child{margin-bottom:0}
+.story-questions{font-size:13px;line-height:1.8;padding-top:2px}
+.story-small-title{font-family:var(--sans);font-size:11px;font-weight:700;line-height:1.6;margin:0 0 24px}
+.story-questions ol{padding-left:1.2em;margin:0}
+.story-questions li{padding-left:.35em;margin-bottom:18px}
+.story-scene{margin:0 0 clamp(70px,10vw,160px)}
+.story-photo{padding:0;display:flex;align-items:flex-start;justify-content:flex-start;width:100%;min-width:0;cursor:zoom-in;text-align:left}
+.story-photo img{display:block;width:100%;height:auto;max-width:100%;object-fit:contain}
+
+.story-media{min-width:0}.story-companion{margin-top:18px;font-size:12px;line-height:1.7}.story-companion summary{cursor:pointer;text-decoration:underline;text-underline-offset:.2em;list-style:none;padding:6px 0}.story-companion summary::-webkit-details-marker{display:none}.story-companion summary::before{content:"+ ";font-family:var(--sans)}.story-companion[open] summary::before{content:"− "}.story-companion img{display:block;width:100%;height:auto;margin-top:18px}.story-companion p{font-size:11px;margin:12px 0 0}
+.story-caption{min-width:0;padding-top:0;font-size:14px;line-height:1.8;letter-spacing:-.015em}
+.story-number{display:block;font-family:var(--sans);font-size:11px;font-weight:700;margin-bottom:18px}
+.story-scene-title{font-family:var(--sans);font-size:22px;line-height:1.45;font-weight:700;letter-spacing:-.035em;margin:0 0 22px}
+.story-memory{margin:0 0 30px}
+.story-song{font-size:12px;line-height:1.7;margin:0 0 28px;word-break:normal}
+.story-detail-label{display:block;font-size:10px;margin-bottom:6px}
+.story-approach{font-size:12px;line-height:1.8;margin:0 0 18px}
+.story-capture{font-size:10px;line-height:1.8;margin:0}
+.story-capture span{display:block}
+.story-end{font-size:13px;line-height:1.6;margin:18px 0 0}
+.story-ending{min-height:78vh;min-height:78svh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:48px 0 80px}
+.story-ending-title{font-family:var(--sans);font-size:clamp(34px,6vw,88px);font-weight:700;line-height:1.12;letter-spacing:-.055em;margin:0}
+.story-playlists{display:flex;flex-wrap:wrap;gap:12px 24px;font-size:13px;line-height:1.8;margin-top:28px}
+.story-playlists a{white-space:nowrap}
+.story-playlist-note{flex-basis:100%;font-size:11px;line-height:1.7}
+.story-image-error{font-size:12px;margin:0}
+#archive-story-return{font-size:13px;line-height:1.8;margin:0 0 16px 22px}
+@media(max-width:900px){.story-intro,.story-scene{grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:30px}.story-overview{padding-right:0}.story-caption{font-size:13px}.story-scene-title{font-size:20px}}
+@media(max-width:600px){.project-story{padding-top:20px;scrollbar-gutter:auto}.story-intro,.story-scene{grid-template-columns:minmax(0,1fr);gap:26px}.story-intro{margin-bottom:60px}.story-intro-copy{font-size:18px;line-height:1.8}.story-kicker{margin-bottom:22px}.story-questions{font-size:12px;max-width:28em}.story-small-title{margin-bottom:14px}.story-questions li{margin-bottom:10px}.story-scene{margin-bottom:72px}.story-caption{font-size:14px;max-width:35em}.story-number{margin-bottom:8px}.story-scene-title{font-size:21px;margin-bottom:15px}.story-memory{margin-bottom:22px}.story-song{margin-bottom:20px}.story-approach{font-size:12px}.story-capture{font-size:10px}#archive-story-return{font-size:11px;margin-left:16px}}
+@media print{.project-story{overflow:visible}.story-scene{break-inside:avoid}}

@@ -1,0 +1,46 @@
+/* The word is the interaction: no explanatory subtitle or added decoration. */
+.wordplay{display:inline-block;max-width:100%;vertical-align:baseline;letter-spacing:0;line-height:1.25}
+.wordplay-visual{position:relative;display:block;height:1.34em;width:7.05em;white-space:nowrap}
+.wordplay-ko .wordplay-visual{width:3.65em}
+.wordplay-morph.wordplay-ko .wordplay-visual{width:5.8em}
+.wordplay-in.wordplay-en .wordplay-visual{width:4.75em}
+.wordplay-self.wordplay-ko .wordplay-visual{width:6.05em}
+.wordplay-glyph{position:absolute;top:0;display:inline-block;width:.78em;height:1.25em;white-space:nowrap;text-align:left}
+.wordplay-ko .wordplay-glyph{width:1.1em}
+.title-ink{display:inline-block;transform-origin:50% 60%;white-space:nowrap}
+.wordplay-still{display:none;font-size:.74em;letter-spacing:.06em;line-height:1.4;white-space:normal}
+.title-morph-shared{opacity:1}
+.title-fade-chemistry{animation:title-chemistry-opacity 10s ease-in-out infinite both}
+.title-fade-design{animation:title-design-opacity 10s ease-in-out infinite both}
+.title-in-chosen{opacity:1}
+.title-in-rest{opacity:.4}
+@keyframes title-chemistry-opacity{
+  0%,15%,100%{opacity:1}
+  50%,65%{opacity:0}
+}
+@keyframes title-design-opacity{
+  0%,15%,100%{opacity:0}
+  50%,65%{opacity:1}
+}
+.wordplay-reveal{display:block;position:relative;padding:0;margin:0;font:inherit;line-height:inherit;text-align:left;letter-spacing:inherit;touch-action:manipulation}
+.wordplay-reveal:focus-visible{outline:1px solid currentColor;outline-offset:.18em}
+.wordplay-reveal .title-ink{transition:transform .8s cubic-bezier(.22,.61,.36,1),opacity .55s ease}
+.title-self-explanation{opacity:0;transform:translate3d(0,.34em,0)}
+.wordplay-reveal[data-self-open=true] .title-self-explanation{opacity:1;transform:translate3d(0,0,0)}
+.wordplay-reveal[data-self-open=true] .title-self-character{opacity:0;transform:translate3d(0,-.34em,0) scale(.8)}
+.wordplay-reveal[data-self-open=true] .title-self-tail{transform:translate3d(var(--open-x),0,0)}
+.wordplay[data-wordplay-paused=true] .title-ink{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){
+  .wordplay-morph .wordplay-visual{display:none}
+  .wordplay-morph .wordplay-still{display:block}
+  .title-ink{animation:none!important;will-change:auto}
+  .wordplay-reveal .title-ink{transition:none}
+}
+@media print{
+  .wordplay-morph .wordplay-visual{display:none}
+  .wordplay-morph .wordplay-still{display:block}
+  .title-ink{animation:none!important;transition:none!important;will-change:auto}
+  .wordplay-reveal .title-self-character{opacity:1!important;transform:none!important}
+  .wordplay-reveal .title-self-explanation{opacity:0!important}
+  .wordplay-reveal .title-self-tail{transform:none!important}
+}
