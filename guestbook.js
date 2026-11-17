@@ -8,7 +8,7 @@
     if (text !== undefined) node.textContent = text;
     return node;
   };
-  const state = { photos: [], current: null, entries: [], traces: [], side: 'front', flipping: false, flipToken: 0, x: .5, y: .5, trigger: null, request: null, generation: 0, viewGeneration: 0, operation: 0, locale: 'ko', busyLabel: '', busy: false, loading: false, ready: false, imageFailed: false };
+  const state = { photos: [], current: null, entries: [], traces: [], side: 'front', flipping: false, flipToken: 0, x: .5, y: .5, trigger: null, request: null, generation: 0, viewGeneration: 0, operation: 0, draftRevision: 0, locale: 'ko', busyLabel: '', busy: false, loading: false, ready: false, imageFailed: false };
   const english = {
   "닫기": "Close",
   "방명록 닫기": "Close guestbook",
@@ -189,23 +189,28 @@
 
     select.addEventListener('change', () => changePhoto(select.value));
     textarea.addEventListener('input', event => {
+      state.draftRevision++;
       count.textContent = `${textarea.value.length} / 80`;
       if (!event.isComposing) updateDraft();
     });
-    textarea.addEventListener('compositionend', () => updateDraft());
+    textarea.addEventListener('compositionend', () => { state.draftRevision++; updateDraft(); });
+    name.addEventListener('input', () => { state.draftRevision++; });
     form.addEventListener('submit', save);
     center.addEventListener('click', () => setPosition(.5, .5));
     artwork.addEventListener('click', event => {
       if (!state.ready || state.busy || state.flipping) return;
       const rect = image.getBoundingClientRect();
       const screenX = (event.clientX - rect.left) / rect.width;
-      setPosition(screenX, (event.clientY - rect.top) / rect.height);
+      setPosition(state.side === 'back' ? 1 - screenX : screenX, (event.clientY - rect.top) / rect.height);
     });
     artwork.addEventListener('keydown', event => {
       const directions = { ArrowLeft: [-.025, 0], ArrowRight: [.025, 0], ArrowUp: [0, -.025], ArrowDown: [0, .025] };
       if (directions[event.key]) {
         event.preventDefault();
-        if (!state.busy && !state.flipping) setPosition(state.x + directions[event.key][0], state.y + directions[event.key][1]);
+        if (!state.busy && !state.flipping) {
+          const [dx, dy] = directions[event.key];
+          setPosition(state.x + (state.side === 'back' ? -dx : dx), state.y + dy);
+        }
       } else if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         textarea.focus();
@@ -281,12 +286,19 @@
     ui.artwork.setAttribute('aria-disabled', String(state.busy || !state.ready));
   }
 
-  function setPosition(x, y) {
-    state.x = clamp(x, .02, .98);
-    state.y = clamp(y, .02, .98);
+  function updatePositionLabel() {
+    const screenX = state.side === 'back' ? 1 - state.x : state.x;
     ui.position.textContent = state.locale === 'en'
-      ? `Current position: ${Math.round(state.x * 100)}% across, ${Math.round(state.y * 100)}% down.`
-      : `현재 위치: 가로 ${Math.round(state.x * 100)}%, 세로 ${Math.round(state.y * 100)}%.`;
+      ? `Current position: ${Math.round(screenX * 100)}% across, ${Math.round(state.y * 100)}% down.`
+      : `현재 위치: 가로 ${Math.round(screenX * 100)}%, 세로 ${Math.round(state.y * 100)}%.`;
+  }
+
+  function setPosition(x, y, trackDraft = true) {
+    const nextX = clamp(x, .02, .98), nextY = clamp(y, .02, .98);
+    if (trackDraft && (nextX !== state.x || nextY !== state.y)) state.draftRevision++;
+    state.x = nextX;
+    state.y = nextY;
+    updatePositionLabel();
     updateDraft(false);
   }
 
@@ -306,6 +318,7 @@
       if (token !== state.flipToken || !ui.dialog.open) return;
       state.side = state.side === 'front' ? 'back' : 'front';
       renderer.setSide(state.side);
+      updatePositionLabel();
       ui.flip.textContent = state.side === 'back' ? t('앞면 보기') : t('뒷면 보기');
       ui.flip.setAttribute('aria-pressed', String(state.side === 'back'));
       ui.artwork.dataset.side = state.side;
@@ -376,6 +389,7 @@
   function changePhoto(id) {
     const photo = state.photos.find(item => item.id === id);
     if (!photo) return;
+    if (state.current && state.current.id !== id) state.draftRevision++;
     renderer.stop();
     state.viewGeneration++;
     state.operation++;
@@ -401,7 +415,7 @@
     ui.list.replaceChildren();
     ui.image.alt = photo.alt;
     ui.image.src = photo.src;
-    setPosition(.5, .5);
+    setPosition(.5, .5, false);
     updateBusy();
     void loadEntries(photo.id);
   }
@@ -413,6 +427,7 @@
     if (!text) { ui.status.textContent = t('남길 감상을 적어주세요.'); ui.textarea.focus(); return; }
     const photoId = state.current.id;
     const view = state.viewGeneration, operation = ++state.operation;
+    const draft = { revision: state.draftRevision, text: ui.textarea.value, name: ui.name.value };
     const payload = { photoId, text, name: ui.name.value.trim(), x: state.x, y: state.y, website: ui.honeypot.value };
     state.busy = true;
     state.busyLabel = t('수놓는 중…');
@@ -421,7 +436,18 @@
     try {
       const result = await request('/api/guestbook', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!result.entry || typeof result.entry.text !== 'string') throw new Error(t('저장을 확인하지 못했습니다. 다시 불러온 후 확인해주세요.'));
+      // Saving succeeds independently of the sewing animation. Consume only
+      // this submitted draft, never a newer draft written after reopening.
+      const clearSavedDraft = state.current?.id === photoId
+        && state.draftRevision === draft.revision
+        && ui.textarea.value === draft.text && ui.name.value === draft.name;
+      if (clearSavedDraft) {
+        ui.textarea.value = '';
+        ui.count.textContent = '0 / 80';
+        state.draftRevision++;
+      }
       if (view !== state.viewGeneration) {
+        if (clearSavedDraft) updateDraft(false);
         if (ui.dialog.open && state.current.id === photoId) void loadEntries(photoId);
         return;
       }
@@ -430,8 +456,6 @@
         ui.status.textContent = t('실을 당겨 마지막 땀을 마무리하고 있어요.');
         await renderer.commit(result.entry, state.entries, state.traces);
         if (view !== state.viewGeneration) return;
-        ui.textarea.value = '';
-        ui.count.textContent = '0 / 80';
         ui.status.textContent = t('사진 위에 기억을 수놓았습니다.');
         renderEntries();
         render();

@@ -196,7 +196,8 @@
     if (project.editorial?.titleSequence) $('archive-title').dataset.storyPhase = titlePhase;
     else delete $('archive-title').dataset.storyPhase;
     const pageTitle = localized(page.storyTitle) || page.title;
-    $('archive-meta').textContent = `${collectionName(collection.id)} · ${page.chapter}${pageTitle === project.title ? '' : ' · ' + pageTitle}`;
+    const redundantTitle = pageTitle === project.title || pageTitle === page.chapter;
+    $('archive-meta').textContent = `${collectionName(collection.id)} · ${page.chapter}${redundantTitle ? '' : ' · ' + pageTitle}`;
     const description = localized(page.memory) || (archiveLanguage === 'ko' && project.descriptionKo) || localized(project.description) || '';
     $('work-description').textContent = description;
     $('work-description').lang = /[가-힣]/.test(description) ? 'ko' : 'en';

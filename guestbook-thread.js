@@ -293,9 +293,10 @@
       const dpr = Math.min(devicePixelRatio || 1, 2), cw = Math.round(width * dpr), ch = Math.round(height * dpr);
       if (this.canvas.width !== cw || this.canvas.height !== ch) { this.canvas.width = cw; this.canvas.height = ch; }
       this.prepareScene(); const ctx = this.ctx; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cw, ch);
-      ctx.setTransform(cw / W, 0, 0, ch / this.height, 0, 0);
-      // The physical flip remains in the dialog; keep the revealed words
-      // readable left-to-right rather than mirroring their letterforms.
+      // Reflect the whole reverse once, including cached stitches, draft,
+      // traveling thread and punctures. Stored geometry stays front-relative.
+      const back = this.side === 'back';
+      ctx.setTransform((back ? -1 : 1) * cw / W, 0, 0, ch / this.height, back ? cw : 0, 0);
       ctx.drawImage(this.scene, 0, 0);
       const subject = this.visibleSubject();
       if (subject && !subject.model.total) {
