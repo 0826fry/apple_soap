@@ -47,6 +47,7 @@
     if (restoreFocus) lastEffectButton?.focus({ preventScroll: true });
   }
   $('reset-effects').addEventListener('click', resetEffects);
+  document.addEventListener('portfolio:before-vv-open', resetEffects);
   document.querySelectorAll('[data-guestbook],#open-guestbook').forEach(button => {
     button.addEventListener('click', event => window.PhotoGuestbook.open(event.currentTarget));
   });

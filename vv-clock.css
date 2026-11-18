@@ -1,0 +1,8 @@
+/* Shared background: no negative overflow out of the note or Safari clipping. */
+.site-sheet.vv-clock-host{position:relative;isolation:isolate;overflow:visible}
+.vv-clock-host>.vv-clock-layer{position:absolute;left:0;top:0;z-index:0;pointer-events:none;user-select:none;overflow:visible}
+.vv-clock-layer[hidden]{display:none!important}
+.vv-clock{position:absolute;display:block;color:var(--ink);opacity:.3;overflow:visible;pointer-events:none}
+.vv-clock ellipse,.vv-clock line{fill:none;stroke:currentColor;stroke-width:.85;vector-effect:non-scaling-stroke}
+body.vv-open .vv-clock-host>.masthead,body.vv-open .vv-clock-host>main,body.vv-open .vv-clock-host>.colophon{position:relative;z-index:1}
+@media print{.vv-clock-layer{display:none}}
