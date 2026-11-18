@@ -889,3 +889,8 @@ window.PORTFOLIO = {
     }
   ]
 };
+window.PORTFOLIO.collections.forEach((collection) => {
+  collection.projects = collection.projects.filter(
+    (project) => project.id !== "soundspace-trainer"
+  );
+});
