@@ -23,6 +23,20 @@
     let ending = null;
     let phase = null;
     let frame = 0;
+    let tallestPhotoRatio = 1;
+
+    function fitPhotos() {
+      if (article.hidden || !article.clientHeight) return;
+      const style = getComputedStyle(article);
+      const availableHeight = article.clientHeight - parseFloat(style.paddingTop)
+        - parseFloat(style.paddingBottom) - 16;
+      // One shared width, set by the tallest photograph, preserves the series'
+      // aligned edges while keeping every complete image inside the reading pane.
+      const width = `${Math.max(1, Math.floor(availableHeight / tallestPhotoRatio))}px`;
+      if (article.style.getPropertyValue('--story-photo-width') !== width) {
+        article.style.setProperty('--story-photo-width', width);
+      }
+    }
 
     function updateTitle(force = false) {
       if (article.hidden || !titleSequence) return;
@@ -42,7 +56,7 @@
       frame = requestAnimationFrame(() => { frame = 0; updateTitle(); });
     }
     article.addEventListener('scroll', queueTitle, { passive: true });
-    new ResizeObserver(queueTitle).observe(article);
+    new ResizeObserver(() => { fitPhotos(); queueTitle(); }).observe(article);
 
     function playlistLinks(playlists, language, note) {
       const links = node('nav', 'story-playlists');
@@ -96,6 +110,8 @@
       const sequence = pages.map((page, index) => ({ page, index }))
         .filter(({ page }) => page.type === 'image')
         .sort((a, b) => (a.page.storyOrder ?? a.index) - (b.page.storyOrder ?? b.index));
+      tallestPhotoRatio = Math.max(1, ...sequence.map(({ page }) =>
+        page.width > 0 && page.height > 0 ? page.height / page.width : 1));
       sequence.forEach(({ page, index }, sceneIndex) => {
         const figure = node('figure', 'story-scene');
         if (page.height > page.width) figure.classList.add('story-scene--portrait');
@@ -112,7 +128,13 @@
         image.alt = page.alt || title;
         image.loading = sceneIndex === 0 ? 'eager' : 'lazy';
         image.decoding = 'async';
-        image.addEventListener('load', queueTitle);
+        image.addEventListener('load', () => {
+          if (image.naturalWidth) {
+            tallestPhotoRatio = Math.max(tallestPhotoRatio, image.naturalHeight / image.naturalWidth);
+            fitPhotos();
+          }
+          queueTitle();
+        });
         if (page.width) image.width = page.width;
         if (page.height) image.height = page.height;
         image.addEventListener('error', () => {
@@ -180,6 +202,7 @@
       render,
       show({ restore = false } = {}) {
         article.hidden = false;
+        fitPhotos();
         article.scrollTop = restore ? scrollPosition : 0;
         if (restore) lastImage?.focus({ preventScroll: true });
         updateTitle(true);
@@ -188,6 +211,8 @@
       clear() {
         article.hidden = true; article.replaceChildren(); scrollPosition = 0; lastImage = null;
         titleSequence = personalScene = ending = phase = null;
+        tallestPhotoRatio = 1;
+        article.style.removeProperty('--story-photo-width');
         delete article.dataset.titlePhase;
         cancelAnimationFrame(frame); frame = 0;
       },

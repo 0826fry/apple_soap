@@ -95,6 +95,7 @@
 
   async function closeNote() {
     if (!isOpen || switching) return;
+    document.dispatchEvent(new CustomEvent('portfolio:before-vv-close'));
     setSwitching(true);
     note.inert = true;
     await fadePage(false, 250);

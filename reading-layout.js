@@ -37,7 +37,8 @@
   function prepareStaticLetters() {
     // Body letters already belong to BANANA. Only split the remaining name,
     // heading and link text, preserving each word's native wrapping and kerning.
-    const roots = [...document.querySelectorAll('.name-ko, .name-en, .copy-cell')];
+    const roots = [...document.querySelectorAll('.name-ko, .name-en, .copy-cell, .vv-masthead-title, .vv-cell')]
+      .filter(root => !root.closest('[hidden]'));
     roots.forEach(root => {
       const nodes = [];
       const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
@@ -96,7 +97,8 @@
     const line = window.innerHeight * .48;
     let best = null;
     let distance = Infinity;
-    essay.querySelectorAll('.copy-row, .section-heading').forEach(element => {
+    const readingPage = body.classList.contains('vv-open') ? document.getElementById('vv-note') : essay;
+    readingPage?.querySelectorAll('.copy-row, .section-heading, .vv-row').forEach(element => {
       const rect = element.getBoundingClientRect();
       if (rect.bottom <= 0 || rect.top >= window.innerHeight || !rect.height) return;
       const gap = rect.top > line ? rect.top - line : rect.bottom < line ? line - rect.bottom : 0;
@@ -141,11 +143,12 @@
   }
 
   function choose(language) {
-    if (!valid(language) || body.dataset.readingLanguage === language) return;
+    if (!valid(language) || body.dataset.readingLanguage === language || body.classList.contains('vv-switching')) return;
     prepareStaticLetters();
     const anchor = readingAnchor();
     const duration = motionPreference.matches ? 0 : transitionDuration;
     const glyphs = [...document.querySelectorAll('.site-sheet .reading-glyph,.site-sheet .fx-glyph')]
+      .filter(element => !element.closest('[hidden]'))
       .filter(element => !element.classList.contains('fx-glyph') || !element.parentElement.closest('.reading-glyph'));
     // Snapshot an interrupted animation before cancelling, so another choice
     // sends the letters from their current painted positions without a jump.
@@ -198,6 +201,10 @@
   body.dataset.readingLanguage = initialLanguage;
   updateControls(initialLanguage);
   controls.forEach(button => button.addEventListener('click', () => choose(button.dataset.readingLanguageButton)));
+  // A page fade replaces the current composition; don't carry letter paths
+  // from the outgoing essay or research note into the incoming page.
+  document.addEventListener('portfolio:before-vv-open', finish);
+  document.addEventListener('portfolio:before-vv-close', finish);
   // Font/viewport changes invalidate the FLIP destinations. Settle cleanly;
   // ordinary scrolling can continue because the animation uses live DOM text.
   window.addEventListener('resize', finish, { passive: true });
