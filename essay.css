@@ -105,3 +105,11 @@ body:has(dialog[open]){overflow:hidden}
 @media print{.reading-toolbar,.reset-action,.back-top{display:none}.site-sheet{padding:0}.copy-cell{break-inside:avoid}.nameplate{margin:20px 0}.essay-section{break-inside:auto}}
 
 @media(max-width:600px){.intro-first .copy-cell{letter-spacing:.16em}.intro-first .copy-cell[lang=en]{letter-spacing:.1em}}
+/* 한영 전환 중 J의 꼬리 잘림 방지 */
+.nameplate .reading-glyph,
+.nameplate .fx-glyph:not(.reading-glyph .fx-glyph) {
+  box-sizing: content-box;
+  padding: .05em .22em;
+  margin: -.05em -.22em;
+  overflow: visible;
+}
